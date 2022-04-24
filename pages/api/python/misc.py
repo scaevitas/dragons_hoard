@@ -1,6 +1,5 @@
 from bs4 import BeautifulSoup as bs
 import requests
-import os
 
 def get_soup(url):
     return bs(requests.get(url).text, "html.parser")
