@@ -19,12 +19,14 @@ print("\nbackgrounds\n")
 with open("backgrounds.json", "w") as data:
     data.write('{"backgrounds":[')
     for a,b in enumerate(background): #needs source
-        data.write("\n    {"+f'"name":"{b.text}"'+"}" + f"{',' if a!=len(background)-1 else ''}")
+        href = b["href"]
+        data.write("\n    {"+f'"name":"{b.text}", "source":"http://dnd5e.wikidot.com{href}"'+"}" + f"{',' if a!=len(background)-1 else ''}")
     data.write("\n]}")
 
 print("\nfeats\n")
 with open("feats.json", "w") as data:
     data.write('{"feats":[')
     for a,b in enumerate(feats): #needs prerequisite and source
-        data.write("\n    {"+f'"name":"{b.text}"'+"}" + f"{',' if a!=len(feats)-1 else ''}")
+        href = b["href"]
+        data.write("\n    {"+f'"name":"{b.text}", "source":"http://dnd5e.wikidot.com{href}"'+"}" + f"{',' if a!=len(feats)-1 else ''}")
     data.write("\n]}")
