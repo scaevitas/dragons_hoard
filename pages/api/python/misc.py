@@ -12,8 +12,6 @@ background = [x for x in temp if "background:" in str(x.get("href"))]
 
 feats = [x for x in temp if "feat:" in str(x.get("href"))]
 
-for a,b in enumerate(temp):
-    print(f"{a}: {b}")
 print("\nbackgrounds\n")
 with open("backgrounds.json", "w") as data:
     data.write('{"backgrounds":[')
@@ -26,11 +24,17 @@ with open("backgrounds.json", "w") as data:
         for x in content:
             if "Source:" in x.text:
                 source = x.text.replace("Source: ", "")
-                if "Hoard of the Dragon Queen" in source: #this is because backgrounds from hoard of the dragon queen has additional text
-                    source = "Hoard of the Dragon Queen"
-                break
-        data.write("\n    {"+f'"name":"{b.text}", "link":"{link}", "source":"{source}"'+"}" + f"{',' if a!=m-1 else ''}")
-        print(" creating:   [" + "#"*int((a+1)/m*10) + "  "*(10-int((a+1)/m*10)) + "]    {:03d}% ".format(int((a+1)/m*100)), end='\r')
+                if "\n" in source: #this is because backgrounds from hoard of the dragon queen has additional text
+                    source = source[:source.index("\n")]
+            elif "Proficiencies: " in x.text: #should probably change this
+                texts = x.text.split("\n")
+                proficiencies = texts[0].replace("Proficiencies: ", "").split(", ")
+                proficiencies = ",".join([f'"{x}"' for x in proficiencies])
+                tools = texts[1].replace("Tool Proficiencies: ", "").split(", ")
+                tools = ",".join([f'"{x}"' for x in tools])
+
+        data.write("\n    {"+f'"name":"{b.text}", "link":"{link}", "source":"{source}", "proficiencies":[{proficiencies}], "tools":[{tools}]'+"}" + f"{',' if a!=m-1 else ''}")
+        print(" creating:   [" + "#"*int((a+1)/m*50) + "·"*(50-int((a+1)/m*50)) + "]    {:03d}% ".format(int((a+1)/m*100)), end='\r')
     
     data.write("\n]}")
 
