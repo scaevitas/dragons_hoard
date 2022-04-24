@@ -9,6 +9,7 @@ temp = list(get_soup("http://dnd5e.wikidot.com/spells").find_all("a"))
 spells = [x for x in temp if "spell:" in str(x.get("href"))]
 with open("spells.json", "w") as data:
     data.write('{"spells":[')
+    m = len(spells)
     for w,x in enumerate(spells):
         href = x["href"]
         text = get_soup(f"http://dnd5e.wikidot.com{href}").find("div", {"id": "page-content"})
@@ -39,7 +40,6 @@ with open("spells.json", "w") as data:
         components = "["+",".join([f'"{x}"' for x in components]) + "]"
         duration = temp[3].replace("Duration: ","")
         data.write(f'\n    ' + "{" + f'"name":"{x.text}","source":"{desc[0].text.replace("Source: ","")}", "level":{level}, "school":"{school}", "ritual":{ritual}, "technomagic":{technomagic}, "duration":"{duration}", "range":"{spellRange}", "components":{components}, "time":"{castTime}", "link":"{permalink}"' + "}"+ f'{"," if w!=len(spells)-1 else ""}')
-        m = len(spells)
         print(" creating:   [" + "#"*int((w+1)/m*10) + "  "*(10-int((w+1)/m*10)) + "]    {:03d}% ".format(int((w+1)/m*100)), end='\r')
 
     data.write("\n]}")

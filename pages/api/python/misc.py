@@ -17,9 +17,21 @@ for a,b in enumerate(temp):
 print("\nbackgrounds\n")
 with open("backgrounds.json", "w") as data:
     data.write('{"backgrounds":[')
+    m = len(background)
     for a,b in enumerate(background): #needs source
         href = b["href"]
-        data.write("\n    {"+f'"name":"{b.text}", "source":"http://dnd5e.wikidot.com{href}"'+"}" + f"{',' if a!=len(background)-1 else ''}")
+        link = f"http://dnd5e.wikidot.com{href}"
+        bg = get_soup(link)
+        content = list(bg.find("div", {"class":"main-content"}).find_all("p"))
+        for x in content:
+            if "Source:" in x.text:
+                source = x.text.replace("Source: ", "")
+                if "Hoard of the Dragon Queen" in source: #this is because backgrounds from hoard of the dragon queen has additional text
+                    source = "Hoard of the Dragon Queen"
+                break
+        data.write("\n    {"+f'"name":"{b.text}", "link":"{link}", "source":"{source}"'+"}" + f"{',' if a!=m-1 else ''}")
+        print(" creating:   [" + "#"*int((a+1)/m*10) + "  "*(10-int((a+1)/m*10)) + "]    {:03d}% ".format(int((a+1)/m*100)), end='\r')
+    
     data.write("\n]}")
 
 print("\nfeats\n")
