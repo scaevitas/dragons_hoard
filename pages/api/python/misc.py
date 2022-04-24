@@ -12,7 +12,7 @@ background = [x for x in temp if "background:" in str(x.get("href"))]
 
 feats = [x for x in temp if "feat:" in str(x.get("href"))]
 
-print("\nbackgrounds\n")
+print("\nbackgrounds")
 with open("backgrounds.json", "w") as data:
     data.write('{"backgrounds":[')
     m = len(background)
@@ -28,14 +28,15 @@ with open("backgrounds.json", "w") as data:
                     source = source[:source.index("\n")]
             elif "Proficiencies: " in x.text: #should probably change this
                 texts = x.text.split("\n")
-                proficiencies = texts[0].replace("Proficiencies: ", "").split(", ")
-                proficiencies = ",".join([f'"{x}"' for x in proficiencies])
-                tools = texts[1].replace("Tool Proficiencies: ", "").split(", ")
-                tools = ",".join([f'"{x}"' for x in tools])
-
-        data.write("\n    {"+f'"name":"{b.text}", "link":"{link}", "source":"{source}", "proficiencies":[{proficiencies}], "tools":[{tools}]'+"}" + f"{',' if a!=m-1 else ''}")
-        print(" creating:   [" + "#"*int((a+1)/m*50) + "·"*(50-int((a+1)/m*50)) + "]    {:03d}% ".format(int((a+1)/m*100)), end='\r')
-    
+                for y in texts:
+                    if "Proficiencies: " in y:
+                        if "Tool" in y:
+                            tools = y.replace("Tool Proficiencies: ", "")
+                            continue
+                        proficiencies = y.replace("Proficiencies: ", "").split(", ")
+                        continue
+        data.write("\n    {"+f'"name":"{b.text}", "link":"{link}", "source":"{source}", "proficiencies":"{proficiencies}", "tools":"{tools}"'+"}" + f"{',' if a!=m-1 else ''}")
+        print(" creating:   [" + "#"*int((a+1)/m*20) + "·"*(20-int((a+1)/m*20)) + "]    {:03d}% ".format(int((a+1)/m*100)), end='\r')
     data.write("\n]}")
 
 print("\nfeats\n")
