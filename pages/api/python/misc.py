@@ -33,7 +33,7 @@ with open("backgrounds.json", "w") as data:
                         if "Tool" in y:
                             tools = y.replace("Tool Proficiencies: ", "")
                             continue
-                        proficiencies = y.replace("Proficiencies: ", "").split(", ")
+                        proficiencies = y.replace("Skill Proficiencies: ", "")
                         continue
         data.write("\n    {"+f'"name":"{b.text}", "link":"{link}", "source":"{source}", "proficiencies":"{proficiencies}", "tools":"{tools}"'+"}" + f"{',' if a!=m-1 else ''}")
         print(" creating:   [" + "#"*int((a+1)/m*20) + "·"*(20-int((a+1)/m*20)) + "]    {:03d}% ".format(int((a+1)/m*100)), end='\r')
